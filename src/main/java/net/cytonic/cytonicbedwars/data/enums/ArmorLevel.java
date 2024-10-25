@@ -11,13 +11,11 @@ public enum ArmorLevel {
     DIAMOND("DIAMOND_BOOTS", "DIAMOND_LEGS"),
     NETHERITE("NETHERITE_BOOTS", "NETHERITE_LEGS");
 
-
     private final String bootsID;
     private final String legsID;
 
     ArmorLevel(String bootsID, String legsID) {
         this.bootsID = bootsID;
-        this.legsID =  legsID;
+        this.legsID = legsID;
     }
-
 }

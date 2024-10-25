@@ -10,7 +10,6 @@ public enum GameState {
     SUDDEN_DEATH(180), // withers - 3 minutes
     ENDED(30), // 30 sec
     CLEANUP(-1),
-
     // admin things
     FROZEN(-1);
 
