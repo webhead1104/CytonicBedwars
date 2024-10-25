@@ -10,6 +10,7 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven("https://repo.foxikle.dev/cytonic")
 }
 
@@ -33,7 +34,7 @@ tasks {
             attributes["Main-Class"] = "net.cytonic.cytosis.Cytosis"
         }
         mergeServiceFiles()
-        archiveFileName.set("CytonicBedwars-${project.version}.jar")
+        archiveFileName.set("cytonicbedwars.jar")
         archiveClassifier.set("")
         //destinationDirectory.set(File(providers.gradleProperty("server_dir").get() + "/plugins"))
     }
