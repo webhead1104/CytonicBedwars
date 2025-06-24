@@ -2,3 +2,7 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 rootProject.name = "CytonicBedwars"
+
+include("core")
+include("solos")
+include("doubles")
