@@ -12,7 +12,7 @@ import net.cytonic.cytonicbedwars.Config;
 import net.cytonic.cytonicbedwars.data.objects.Team;
 import net.cytonic.cytosis.Cytosis;
 import net.cytonic.cytosis.bootstrap.annotations.CytosisComponent;
-import net.cytonic.cytosis.data.MysqlDatabase;
+import net.cytonic.cytosis.data.EnvironmentDatabase;
 import net.cytonic.cytosis.logging.Logger;
 
 @CytosisComponent(dependsOn = InstanceContainer.class)
@@ -37,7 +37,7 @@ public class WorldManager {
             //fixme
 //            var dimKey = MinecraftServer.getDimensionTypeRegistry().register("bedwars:" + Config.worldName, DimensionType.builder().ambientLight(100).build());
             Cytosis.CONTEXT.registerComponent(MinecraftServer.getInstanceManager().createInstanceContainer());
-            Cytosis.CONTEXT.getComponent(MysqlDatabase.class)
+            Cytosis.CONTEXT.getComponent(EnvironmentDatabase.class)
                 .getWorld(Config.worldName, "bedwars_map_" + Config.mode.toLowerCase())
                 .whenComplete((world, throwable) -> {
                     if (throwable != null) {

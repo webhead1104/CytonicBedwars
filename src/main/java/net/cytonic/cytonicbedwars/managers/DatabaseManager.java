@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import net.cytonic.cytosis.Bootstrappable;
 import net.cytonic.cytosis.Cytosis;
 import net.cytonic.cytosis.bootstrap.annotations.CytosisComponent;
-import net.cytonic.cytosis.data.MysqlDatabase;
+import net.cytonic.cytosis.data.EnvironmentDatabase;
 import net.cytonic.cytosis.logging.Logger;
 
 @CytosisComponent
@@ -15,19 +15,20 @@ public class DatabaseManager implements Bootstrappable {
     @Override
     public void init() {
         createStatsTable();
+        //todo fix use jooq
     }
 
     private void createStatsTable() {
-        MysqlDatabase database = Cytosis.CONTEXT.getComponent(MysqlDatabase.class);
+        EnvironmentDatabase database = Cytosis.CONTEXT.getComponent(EnvironmentDatabase.class);
         PreparedStatement ps = database.prepare(
-            "CREATE TABLE IF NOT EXISTS bedwars_stats (uuid VARCHAR(36), kills INT, deaths INT, finalKills INT, bedsBroken INT, damageDealt DOUBLE, damageTaken DOUBLE, PRIMARY KEY (uuid))");
+            "CREATE TABLE IF NOT EXISTS bedwars_stats (uuid UUID, kills INT, deaths INT, finalKills INT, bedsBroken INT, damageDealt FLOAT, damageTaken FLOAT, PRIMARY KEY (uuid))");
         database.update(ps);
     }
 
     public void saveStats() {
         Cytosis.CONTEXT.getComponent(StatsManager.class).getStats().forEach((uuid, kills) -> {
             try {
-                MysqlDatabase database = Cytosis.CONTEXT.getComponent(MysqlDatabase.class);
+                EnvironmentDatabase database = Cytosis.CONTEXT.getComponent(EnvironmentDatabase.class);
                 PreparedStatement ps = database.prepare(
                     "INSERT IGNORE INTO bedwars_stats (uuid, kills, deaths, finalKills, bedsBroken, damageDealt, damageTaken) VALUES (?, ?, ?, ?, ?, ?, ?)");
                 ps.setString(1, uuid.toString());
