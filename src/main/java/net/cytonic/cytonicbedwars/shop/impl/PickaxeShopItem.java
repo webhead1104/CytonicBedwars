@@ -2,6 +2,7 @@ package net.cytonic.cytonicbedwars.shop.impl;
 
 import java.util.List;
 
+import com.google.j2objc.annotations.UsedByReflection;
 import net.minestom.server.item.Material;
 
 import net.cytonic.cytonicbedwars.data.enums.Currency;
@@ -9,6 +10,7 @@ import net.cytonic.cytonicbedwars.data.enums.PickaxeLevel;
 import net.cytonic.cytonicbedwars.shop.ItemShopPage;
 import net.cytonic.cytosis.utils.Msg;
 
+@UsedByReflection
 public class PickaxeShopItem extends UpgradableShopItem {
 
     public PickaxeShopItem() {

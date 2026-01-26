@@ -3,6 +3,7 @@ package net.cytonic.cytonicbedwars.shop.impl;
 import java.util.List;
 import java.util.Objects;
 
+import com.google.j2objc.annotations.UsedByReflection;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 
@@ -12,6 +13,7 @@ import net.cytonic.cytonicbedwars.shop.ItemShopPage;
 import net.cytonic.cytonicbedwars.shop.ShopItem;
 import net.cytonic.cytosis.utils.Msg;
 
+@UsedByReflection
 public class WoolShopItem extends ShopItem {
 
     public WoolShopItem() {
