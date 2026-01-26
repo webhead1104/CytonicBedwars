@@ -32,9 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.cytonic.cytonicbedwars.Config;
-import net.cytonic.cytonicbedwars.data.enums.AxeLevel;
 import net.cytonic.cytonicbedwars.data.enums.GameState;
-import net.cytonic.cytonicbedwars.data.enums.PickaxeLevel;
 import net.cytonic.cytonicbedwars.data.objects.PlayerList;
 import net.cytonic.cytonicbedwars.data.objects.Scoreboard;
 import net.cytonic.cytonicbedwars.data.objects.Stats;

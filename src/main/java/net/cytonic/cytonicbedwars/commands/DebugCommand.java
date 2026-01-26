@@ -20,13 +20,13 @@ public class DebugCommand extends CytosisCommand {
         super("debug");
 
         setCondition(CommandUtils.IS_ADMIN);
-        setDefaultExecutor((sender, context) -> sender.sendMessage(Msg.whoops("You must specify a command!")));
+        setDefaultExecutor((sender, _) -> sender.sendMessage(Msg.whoops("You must specify a command!")));
 
         var debugArgument = ArgumentType.Word("debug")
             .from("start", "forceStart", "end", "cleanup", "listteams", "freeze", "f", "itemshop", "teaminfo");
         debugArgument.setCallback((sender, exception) -> sender.sendMessage(
             Msg.whoops("The command " + exception.getInput() + " is invalid!")));
-        debugArgument.setSuggestionCallback((commandSender, commandContext, suggestion) -> {
+        debugArgument.setSuggestionCallback((_, _, suggestion) -> {
             suggestion.addEntry(new SuggestionEntry("start", Msg.green("Starts the game!")));
             suggestion.addEntry(new SuggestionEntry("forceStart", Msg.green("Force starts the game!")));
             suggestion.addEntry(new SuggestionEntry("end", Msg.green("Ends the game!")));
