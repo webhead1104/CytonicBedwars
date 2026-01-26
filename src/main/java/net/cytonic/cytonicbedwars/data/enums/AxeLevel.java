@@ -4,50 +4,18 @@ import lombok.Getter;
 
 @Getter
 public enum AxeLevel {
-    NONE(-1, null),
-    WOODEN(0, "WOODEN_AXE"),
-    STONE(1, "STONE_AXE"),
-    IRON(2, "IRON_AXE"),
-    DIAMOND(3, "DIAMOND_AXE");
+    NONE,
+    WOODEN,
+    STONE,
+    IRON,
+    DIAMOND;
 
-    private final int order;
-    private final String itemID;
-
-    AxeLevel(int order, String itemID) {
-        this.order = order;
-        this.itemID = itemID;
-    }
-
-    public static AxeLevel getOrdered(AxeLevel level, int i) {
-        if (level == null) level = NONE;
-        if (level.getOrder() == 0 && i < 1) return WOODEN; // can't go below wooden
-        return getByOrder(level.getOrder() + i);
-    }
-
-    public static AxeLevel getByOrder(int i) {
-        switch (i) {
-            case -1 -> {
-                return NONE;
-            }
-            case 0 -> {
-                return WOODEN;
-            }
-
-            case 1 -> {
-                return STONE;
-            }
-
-            case 2 -> {
-                return IRON;
-            }
-
-            case 3 -> {
-                return DIAMOND;
-            }
-            default -> {
-                return null;
+    public static AxeLevel getByOrdinal(int index) {
+        for (AxeLevel level : values()) {
+            if (level.ordinal() == index) {
+                return level;
             }
         }
+        return null;
     }
-
 }

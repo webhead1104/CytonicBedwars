@@ -8,7 +8,7 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import org.jetbrains.annotations.NotNull;
 
-import net.cytonic.cytonicbedwars.menu.MenuUtils;
+import net.cytonic.cytosis.menus.MenuUtils;
 import net.cytonic.cytosis.utils.Msg;
 
 public class SpectatorSpeedMenu extends View {
@@ -25,7 +25,7 @@ public class SpectatorSpeedMenu extends View {
 
     @Override
     public void onFirstRender(@NotNull RenderContext context) {
-        context.layoutSlot('#', MenuUtils.filler);
+        context.layoutSlot('#', MenuUtils.BORDER);
         createSpeedItem(context, 'T', 0.01f, Material.LEATHER_BOOTS);
         createSpeedItem(context, 'H', 0.05f, Material.CHAINMAIL_BOOTS);
         createSpeedItem(context, 'N', 0.1f, Material.IRON_BOOTS);

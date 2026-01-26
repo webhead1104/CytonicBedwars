@@ -311,13 +311,14 @@ public class GameManager implements Bootstrappable {
         Cytosis.CONTEXT.getComponent(StatsManager.class).getStats(dead.getUuid()).addDeath();
 
         //degrade tools
-        if (AxeLevel.getOrdered(dead.getAxeLevel(), -1) != null) {
-            dead.setAxeLevel(AxeLevel.getOrdered(dead.getAxeLevel(), -1));
-        }
-
-        if (PickaxeLevel.getOrdered(dead.getPickaxeLevel(), -1) != null) {
-            dead.setPickaxeLevel(PickaxeLevel.getOrdered(dead.getPickaxeLevel(), -1));
-        }
+        //todo
+//        if (AxeLevel.getOrdered(dead.getAxeLevel(), -1) != null) {
+//            dead.setAxeLevel(AxeLevel.getOrdered(dead.getAxeLevel(), -1));
+//        }
+        //todo
+//        if (PickaxeLevel.getOrdered(dead.getPickaxeLevel(), -1) != null) {
+//            dead.setPickaxeLevel(PickaxeLevel.getOrdered(dead.getPickaxeLevel(), -1));
+//        }
 
         boolean finalKill = false;
         Component message = Msg.mm("%s%s<reset> ", deadTeam.getPrefix(), dead.getUsername());
@@ -420,8 +421,8 @@ public class GameManager implements Bootstrappable {
 
         // set tools
         //todo: check for enchants / team upgrades
-        dead.getInventory().addItemStack(Items.get(dead.getAxeLevel().getItemID()));
-        dead.getInventory().addItemStack(Items.get(dead.getPickaxeLevel().getItemID()));
+//        dead.getInventory().addItemStack(Items.get(dead.getAxeLevel().getItemID()));
+//        dead.getInventory().addItemStack(Items.get(dead.getPickaxeLevel().getItemID()));
         if (dead.hasShears()) {
             dead.getInventory().addItemStack(Items.SHEARS);
         }

@@ -6,7 +6,7 @@ import net.minestom.server.command.builder.suggestion.SuggestionEntry;
 
 import net.cytonic.cytonicbedwars.data.enums.GameState;
 import net.cytonic.cytonicbedwars.managers.GameManager;
-import net.cytonic.cytonicbedwars.menu.itemShop.BlocksShopMenu;
+import net.cytonic.cytonicbedwars.menu.ItemShopMenu;
 import net.cytonic.cytonicbedwars.player.BedwarsPlayer;
 import net.cytonic.cytonicbedwars.runnables.WaitingRunnable;
 import net.cytonic.cytosis.Cytosis;
@@ -89,7 +89,7 @@ public class DebugCommand extends CytosisCommand {
                             player.sendMessage(Msg.redSplash("!! WARNING !!",
                                 "The game has not been started. Some shop pages may not work!"));
                         }
-                        Cytosis.CONTEXT.getComponent(ViewFrame.class).open(BlocksShopMenu.class, player);
+                        Cytosis.CONTEXT.getComponent(ViewFrame.class).open(ItemShopMenu.class, player);
                     }
                     case "teaminfo" -> Cytosis.CONTEXT.getComponent(GameManager.class).getTeams().forEach(team -> {
                         player.sendMessage(Msg.mm("<%s><b>Team:</b> %s", team.getColor(), team.getName()));

@@ -23,7 +23,8 @@ public class PickupItemListener {
             final ItemStack item = event.getItemEntity().getItemStack();
             if (item.hasTag(Items.NAMESPACE) && item.getTag(Items.NAMESPACE).contains("SWORD") && !item.getTag(
                 Items.NAMESPACE).contains("MENU")) {
-                player.setSword(item);
+                //todo
+//                player.setSword(item);
                 event.getItemEntity().setItemStack(ItemStack.AIR);
                 event.setCancelled(true);
                 return;

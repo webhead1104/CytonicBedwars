@@ -8,13 +8,16 @@ import lombok.Setter;
 import net.minestom.server.inventory.Inventory;
 import net.minestom.server.inventory.InventoryType;
 import net.minestom.server.item.ItemStack;
+import net.minestom.server.item.Material;
 import net.minestom.server.network.player.GameProfile;
 import net.minestom.server.network.player.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import net.cytonic.cytonicbedwars.data.enums.ArmorLevel;
 import net.cytonic.cytonicbedwars.data.enums.AxeLevel;
 import net.cytonic.cytonicbedwars.data.enums.PickaxeLevel;
+import net.cytonic.cytonicbedwars.data.objects.Team;
 import net.cytonic.cytonicbedwars.managers.GameManager;
 import net.cytonic.cytonicbedwars.utils.Items;
 import net.cytonic.cytosis.Cytosis;
@@ -69,39 +72,20 @@ public class BedwarsPlayer extends CytosisPlayer {
         openInventory(enderChest);
     }
 
-    public void setAxeLevel(AxeLevel level) {
-        this.axeLevel = level;
-        setAxe(level);
-    }
+    public void removeItems(Material material, int amount) {
+        ItemStack[] slots = inventory.getItemStacks();
+        int remaining = amount;
 
-    public boolean takeItem(String id, int quantity) {
-        int toRemove = quantity;
-        if (itemCount(id) >= quantity) {
-            int i = 0;
-            for (ItemStack stack : inventory.getItemStacks()) {
-                if (stack.hasTag(Items.NAMESPACE)) {
-                    if (stack.amount() <= toRemove) { // go ahead to remove the entire stack
-                        if (stack.getTag(Items.NAMESPACE).equals(id)) {
-                            toRemove -= stack.amount();
-                            inventory.setItemStack(i, stack.withAmount(0));
-                        }
-
-                        if (toRemove == 0) {
-                            return true;
-                        }
-                    } else { // only remove some
-                        if (stack.getTag(Items.NAMESPACE).equals(id)) {
-                            inventory.setItemStack(i, stack.withAmount(stack.amount() - toRemove));
-                            return true;
-                        }
-                    }
-                }
-                i++;
+        for (int i = 0; i < slots.length && remaining > 0; i++) {
+            var stack = slots[i];
+            if (stack.material() == material) {
+                int remove = Math.min(stack.amount(), remaining);
+                int updated = stack.amount() - remove;
+                inventory.setItemStack(i,
+                    updated > 0 ? stack.withAmount(updated) : ItemStack.AIR);
+                remaining -= remove;
             }
-        } else {
-            return false;
         }
-        return false;
     }
 
     public int itemCount(String id) {
@@ -115,53 +99,8 @@ public class BedwarsPlayer extends CytosisPlayer {
         return count;
     }
 
-    public boolean hasSpace() {
-        for (ItemStack stack : inventory.getItemStacks()) {
-            if (stack.isAir()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void setAxe(AxeLevel level) {
-        if (level == AxeLevel.WOODEN) { // doesn't have an axe to remove
-            inventory.addItemStack(Items.WOODEN_AXE);
-            return;
-        }
-        ItemStack[] items = inventory.getItemStacks();
-        for (int i = 0; i < inventory.getItemStacks().length; i++) {
-            if (items[i].hasTag(Items.NAMESPACE)) {
-                String oldID = AxeLevel.getOrdered(level, -1).getItemID();
-                String id = items[i].getTag(Items.NAMESPACE);
-                if (id.equals(oldID)) {
-                    inventory.setItemStack(i, Items.get(level.getItemID()));
-                    return;
-                }
-            }
-        }
-    }
-
-    public void setPickaxe(PickaxeLevel level) {
-        if (level == PickaxeLevel.WOODEN) { // doesn't have an axe to remove
-            inventory.addItemStack(Items.WOODEN_PICKAXE);
-            return;
-        }
-        ItemStack[] items = inventory.getItemStacks();
-        for (int i = 0; i < inventory.getItemStacks().length; i++) {
-            if (items[1].hasTag(Items.NAMESPACE)) {
-                String oldID = PickaxeLevel.getOrdered(level, -1).getItemID();
-                String id = items[i].getTag(Items.NAMESPACE);
-                if (id.equals(oldID)) {
-                    inventory.setItemStack(i, Items.get(level.getItemID()));
-                    return;
-                }
-            }
-        }
-    }
-
-    public void setSword(ItemStack sword) {
-        takeItem("DEFAULT_SWORD", 1);
-        inventory.addItemStack(sword);
+    @Nullable
+    public Team getBedwarsTeam() {
+        return Cytosis.get(GameManager.class).getPlayerTeam(this).orElse(null);
     }
 }

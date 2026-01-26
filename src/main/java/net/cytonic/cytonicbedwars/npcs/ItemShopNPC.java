@@ -7,7 +7,7 @@ import net.kyori.adventure.text.Component;
 import net.minestom.server.coordinate.Pos;
 
 import net.cytonic.cytonicbedwars.Config;
-import net.cytonic.cytonicbedwars.menu.itemShop.BlocksShopMenu;
+import net.cytonic.cytonicbedwars.menu.ItemShopMenu;
 import net.cytonic.cytosis.Cytosis;
 import net.cytonic.cytosis.entity.npc.NPC;
 import net.cytonic.cytosis.entity.npc.configuration.NPCConfiguration;
@@ -50,6 +50,6 @@ public class ItemShopNPC extends NPC {
 
     @Override
     public void onClick(NPCInteractEvent event) {
-        Cytosis.CONTEXT.getComponent(ViewFrame.class).open(BlocksShopMenu.class, event.player());
+        Cytosis.CONTEXT.getComponent(ViewFrame.class).open(ItemShopMenu.class, event.player());
     }
 }
