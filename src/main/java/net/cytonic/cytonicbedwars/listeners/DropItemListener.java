@@ -28,7 +28,9 @@ public class DropItemListener {
                 return;
             }
         }
-        if (event.getPlayer().getTag(VanillaFallFeature.FALL_DISTANCE) > 1) {
+
+        if (!event.getPlayer().hasTag(VanillaFallFeature.FALL_DISTANCE)
+            || event.getPlayer().getTag(VanillaFallFeature.FALL_DISTANCE) > 1) {
             event.setCancelled(true);
             return;
         }
