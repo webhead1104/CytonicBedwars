@@ -32,7 +32,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.cytonic.cytonicbedwars.Config;
+import net.cytonic.cytonicbedwars.data.enums.AxeLevel;
 import net.cytonic.cytonicbedwars.data.enums.GameState;
+import net.cytonic.cytonicbedwars.data.enums.PickaxeLevel;
 import net.cytonic.cytonicbedwars.data.objects.PlayerList;
 import net.cytonic.cytonicbedwars.data.objects.Scoreboard;
 import net.cytonic.cytonicbedwars.data.objects.Stats;
@@ -309,14 +311,14 @@ public class GameManager implements Bootstrappable {
         Cytosis.CONTEXT.getComponent(StatsManager.class).getStats(dead.getUuid()).addDeath();
 
         //degrade tools
-        //todo
-//        if (AxeLevel.getOrdered(dead.getAxeLevel(), -1) != null) {
-//            dead.setAxeLevel(AxeLevel.getOrdered(dead.getAxeLevel(), -1));
-//        }
-        //todo
-//        if (PickaxeLevel.getOrdered(dead.getPickaxeLevel(), -1) != null) {
-//            dead.setPickaxeLevel(PickaxeLevel.getOrdered(dead.getPickaxeLevel(), -1));
-//        }
+        AxeLevel axeLevel = AxeLevel.getByOrdinal(dead.getAxeLevel().ordinal() - 1);
+        if (axeLevel != null) {
+            dead.setAxeLevel(axeLevel);
+        }
+        PickaxeLevel pickaxeLevel = PickaxeLevel.getByOrdinal(dead.getPickaxeLevel().ordinal() - 1);
+        if (pickaxeLevel != null) {
+            dead.setPickaxeLevel(pickaxeLevel);
+        }
 
         boolean finalKill = false;
         Component message = Msg.mm("%s%s<reset> ", deadTeam.getPrefix(), dead.getUsername());
@@ -419,8 +421,8 @@ public class GameManager implements Bootstrappable {
 
         // set tools
         //todo: check for enchants / team upgrades
-//        dead.getInventory().addItemStack(Items.get(dead.getAxeLevel().getItemID()));
-//        dead.getInventory().addItemStack(Items.get(dead.getPickaxeLevel().getItemID()));
+        dead.getInventory().addItemStack(Items.get(dead.getAxeLevel().getItemID()));
+        dead.getInventory().addItemStack(Items.get(dead.getPickaxeLevel().getItemID()));
         if (dead.hasShears()) {
             dead.getInventory().addItemStack(Items.SHEARS);
         }
