@@ -103,4 +103,14 @@ public class BedwarsPlayer extends CytosisPlayer {
     public Team getBedwarsTeam() {
         return Cytosis.get(GameManager.class).getPlayerTeam(this).orElse(null);
     }
+
+    public void giveAxe() {
+        if (axeLevel == AxeLevel.NONE) return;
+        inventory.addItemStack(Items.get(axeLevel.getItemID()));
+    }
+
+    public void givePickaxe() {
+        if (pickaxeLevel == PickaxeLevel.NONE) return;
+        inventory.addItemStack(Items.get(pickaxeLevel.getItemID()));
+    }
 }

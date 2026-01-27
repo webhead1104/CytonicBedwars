@@ -10,6 +10,7 @@ import net.minestom.server.entity.ItemEntity;
 import net.minestom.server.event.item.ItemDropEvent;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.item.ItemStack;
+import net.minestom.server.utils.time.Tick;
 
 import net.cytonic.cytonicbedwars.utils.Items;
 import net.cytonic.cytosis.Cytosis;
@@ -22,11 +23,9 @@ public class DropItemListener {
     @Listener
     public void onDrop(ItemDropEvent event) {
         ItemStack item = event.getItemStack();
-        if (item.hasTag(Items.NO_DROP)) {
-            if (item.getTag(Items.NO_DROP)) {
-                event.setCancelled(true);
-                return;
-            }
+        if (item.hasTag(Items.NO_DROP) && item.getTag(Items.NO_DROP)) {
+            event.setCancelled(true);
+            return;
         }
 
         if (!event.getPlayer().hasTag(VanillaFallFeature.FALL_DISTANCE)
@@ -35,12 +34,10 @@ public class DropItemListener {
             return;
         }
 
-        if (item.hasTag(Items.NAMESPACE) && item.getTag(Items.NAMESPACE).contains("SWORD") && !item.getTag(
-            Items.NAMESPACE).contains("MENU")) {
+        if (item.hasTag(Items.NAMESPACE) && item.getTag(Items.NAMESPACE).contains("SWORD")) {
             int swords = -1; //the sword in the event is still in the inventory
             for (ItemStack itemStack : event.getPlayer().getInventory().getItemStacks()) {
-                if (itemStack.hasTag(Items.NAMESPACE) && itemStack.getTag(Items.NAMESPACE).contains("SWORD")
-                    && !itemStack.getTag(Items.NAMESPACE).contains("MENU")) {
+                if (itemStack.hasTag(Items.NAMESPACE) && itemStack.getTag(Items.NAMESPACE).contains("SWORD")) {
                     swords++;
                 }
             }
@@ -51,12 +48,10 @@ public class DropItemListener {
             }
         }
 
-        if (!event.isCancelled()) {
-            Pos playerPos = event.getPlayer().getPosition();
-            ItemEntity itemEntity = new ItemEntity(event.getItemStack());
-            itemEntity.setPickupDelay(Duration.ofMillis(500));
-            itemEntity.setInstance(Cytosis.CONTEXT.getComponent(InstanceContainer.class), playerPos.add(0, 1.5, 0));
-            itemEntity.setVelocity(playerPos.direction().mul(6));
-        }
+        Pos playerPos = event.getPlayer().getPosition();
+        ItemEntity itemEntity = new ItemEntity(event.getItemStack());
+        itemEntity.setPickupDelay(Tick.server(40));
+        itemEntity.setInstance(Cytosis.CONTEXT.getComponent(InstanceContainer.class), playerPos.add(0, 1.5, 0));
+        itemEntity.setVelocity(playerPos.direction().mul(6));
     }
 }

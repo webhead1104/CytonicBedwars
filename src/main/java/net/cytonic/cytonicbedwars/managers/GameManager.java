@@ -421,8 +421,8 @@ public class GameManager implements Bootstrappable {
 
         // set tools
         //todo: check for enchants / team upgrades
-        dead.getInventory().addItemStack(Items.get(dead.getAxeLevel().getItemID()));
-        dead.getInventory().addItemStack(Items.get(dead.getPickaxeLevel().getItemID()));
+        dead.giveAxe();
+        dead.givePickaxe();
         if (dead.hasShears()) {
             dead.getInventory().addItemStack(Items.SHEARS);
         }
