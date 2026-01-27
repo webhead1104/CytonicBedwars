@@ -26,11 +26,12 @@ import net.minestom.server.tag.Tag;
 import net.cytonic.cytosis.utils.Msg;
 
 @Deprecated
+//todo figure out this mess
 @NoArgsConstructor
 public class Items {
 
     private static final Map<String, ItemStack> itemRegistry = new HashMap<>();
-    public static Tag<String> NAMESPACE = Tag.String("bwID");
+    public static Tag<String> NAMESPACE = Tag.String("bw_id");
     public static Tag<Boolean> MOVE_BLACKLIST = Tag.Boolean("move_blacklist");
     public static Tag<BinaryTag> ALLOWED_SLOTS = Tag.NBT("allowed_slots");
     public static Tag<Boolean> NO_DROP = Tag.Boolean("no_drop");
