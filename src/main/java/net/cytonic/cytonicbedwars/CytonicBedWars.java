@@ -1,5 +1,8 @@
 package net.cytonic.cytonicbedwars;
 
+import io.github.togar2.pvp.MinestomPvP;
+import io.github.togar2.pvp.feature.CombatFeatureSet;
+import io.github.togar2.pvp.feature.CombatFeatures;
 import lombok.Getter;
 import net.kyori.adventure.key.Key;
 import net.minestom.server.MinecraftServer;
@@ -37,6 +40,7 @@ public final class CytonicBedWars implements CytosisPlugin {
             return;
         }
 //        Cytosis.CONTEXT.setServerGroup(new ServerGroup("bedwars", gameType));
+        initPvp();
         MinecraftServer.getConnectionManager().setPlayerProvider(BedwarsPlayer::new);
         MinecraftServer.getBlockManager()
             .registerHandler(Key.key("minecraft:ender_chest"), EnderChestBlockHandler::new);
@@ -61,6 +65,13 @@ public final class CytonicBedWars implements CytosisPlugin {
 
     @Override
     public void shutdown() {
+    }
+
+    private void initPvp() {
+        MinestomPvP.init(false, true);
+
+        CombatFeatureSet modernVanilla = CombatFeatures.modernVanilla();
+        MinecraftServer.getGlobalEventHandler().addChild(modernVanilla.createNode());
     }
 
     private void registerCommands() {
