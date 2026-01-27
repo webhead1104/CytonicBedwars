@@ -3,7 +3,6 @@ package net.cytonic.cytonicbedwars.menu.spectators;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import me.devnatan.inventoryframework.View;
 import me.devnatan.inventoryframework.ViewConfigBuilder;
@@ -28,12 +27,12 @@ public class SpectatorSelectMenu extends View {
 
     @Override
     public void onInit(@NotNull ViewConfigBuilder config) {
+        config.cancelInteractions();
         config.title(Msg.mm("Spectate a player"));
     }
 
     @Override
     public void onFirstRender(@NotNull RenderContext context) {
-        AtomicInteger slot = new AtomicInteger();
         List<BedwarsPlayer> players = Cytosis.CONTEXT.getComponent(GameManager.class).getTeams().stream()
             .map(Team::getPlayers).flatMap(List::stream).toList();
 
@@ -45,7 +44,7 @@ public class SpectatorSelectMenu extends View {
                 .lore(Msg.grey("Click to teleport to %s", player.getUsername()))
                 .set(UUID_TAG, player.getUuid())
                 .build();
-            context.firstSlot(itemStack).onClick(slotClickContext -> {
+            context.availableSlot(itemStack).onClick(slotClickContext -> {
                 UUID uuid = slotClickContext.getItem().getTag(UUID_TAG);
                 if (Cytosis.getPlayer(uuid).isEmpty()) {
                     slotClickContext.getPlayer().sendMessage(Msg.whoops("That player is not online"));

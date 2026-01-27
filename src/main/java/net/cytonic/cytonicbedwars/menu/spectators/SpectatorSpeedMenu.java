@@ -16,6 +16,7 @@ public class SpectatorSpeedMenu extends View {
     @Override
     public void onInit(@NotNull ViewConfigBuilder config) {
         config.title(Msg.mm("Flight Speed"));
+        config.cancelInteractions();
         config.layout(
             "#########",
             "##THN25##",
