@@ -66,7 +66,7 @@ public class GameManager implements Bootstrappable {
     private final List<NPC> npcList = new ArrayList<>();
     public boolean STARTED = false;
     private GameState beforeFrozen;
-    private GameState gameState;
+    private GameState gameState = GameState.WAITING;
     private WaitingRunnable waitingRunnable;
     private GameRunnable gameRunnable;
 
