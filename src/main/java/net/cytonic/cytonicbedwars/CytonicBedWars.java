@@ -12,10 +12,8 @@ import net.cytonic.cytonicbedwars.blockHandlers.ChestBlockHandler;
 import net.cytonic.cytonicbedwars.blockHandlers.EnderChestBlockHandler;
 import net.cytonic.cytonicbedwars.commands.DebugCommand;
 import net.cytonic.cytonicbedwars.commands.ItemCommand;
-import net.cytonic.cytonicbedwars.managers.DatabaseManager;
 import net.cytonic.cytonicbedwars.managers.GameManager;
 import net.cytonic.cytonicbedwars.managers.GeneratorManager;
-import net.cytonic.cytonicbedwars.managers.StatsManager;
 import net.cytonic.cytonicbedwars.managers.WorldManager;
 import net.cytonic.cytonicbedwars.player.BedwarsPlayer;
 import net.cytonic.cytosis.Cytosis;
@@ -56,9 +54,7 @@ public final class CytonicBedWars implements CytosisPlugin {
                 registerCommands();
                 Cytosis.CONTEXT.registerComponent(new WorldManager());
                 Cytosis.CONTEXT.registerComponent(new GameManager());
-                Cytosis.CONTEXT.registerComponent(new DatabaseManager());
                 Cytosis.CONTEXT.registerComponent(new GeneratorManager());
-                Cytosis.CONTEXT.registerComponent(new StatsManager());
                 Cytosis.CONTEXT.registerComponent(new ItemAbilityDispatcher());
             });
     }

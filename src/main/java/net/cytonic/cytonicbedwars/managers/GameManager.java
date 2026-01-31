@@ -36,8 +36,8 @@ import net.cytonic.cytonicbedwars.data.enums.AxeLevel;
 import net.cytonic.cytonicbedwars.data.enums.GameState;
 import net.cytonic.cytonicbedwars.data.enums.PickaxeLevel;
 import net.cytonic.cytonicbedwars.data.objects.PlayerList;
+import net.cytonic.cytonicbedwars.data.objects.PlayerStats;
 import net.cytonic.cytonicbedwars.data.objects.Scoreboard;
-import net.cytonic.cytonicbedwars.data.objects.Stats;
 import net.cytonic.cytonicbedwars.data.objects.Team;
 import net.cytonic.cytonicbedwars.npcs.ItemShopNPC;
 import net.cytonic.cytonicbedwars.npcs.TeamShopNPC;
@@ -99,8 +99,6 @@ public class GameManager implements Bootstrappable {
         Cytosis.CONTEXT.getComponent(WorldManager.class).removeSpawnPlatform();
         STARTED = true;
         setGameState(GameState.PLAY);
-        Cytosis.getOnlinePlayers()
-            .forEach(player -> Cytosis.CONTEXT.getComponent(StatsManager.class).addPlayer(player.getUuid()));
         // split players into teams
         teams.addAll(splitPlayersIntoTeams(Cytosis.getOnlinePlayers().stream().toList()));
 
@@ -198,11 +196,15 @@ public class GameManager implements Bootstrappable {
         }).delay(Duration.ofSeconds(10)).schedule();
         Team winningTeam = teams.stream().filter(Team::isAlive).findFirst().orElseThrow();
         List<BedwarsPlayer> winners = winningTeam.getPlayers();
-        Cytosis.getOnlinePlayers().forEach(player -> {
+        Cytosis.getOnlinePlayers().forEach(p -> {
+            if (!(p instanceof BedwarsPlayer player)) return;
+
             if (winners.stream().map(BedwarsPlayer::getUuid).toList().contains(player.getUuid())) {
                 player.showTitle(Title.title(Msg.gold("<b>VICTORY!"), Msg.mm(""),
                     Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(2), Duration.ofSeconds(1))));
+                player.getStats().addWin();
             } else {
+                player.getStats().addLoss();
                 player.showTitle(Title.title(Msg.red("<b>GAME OVER!"), Msg.mm(""),
                     Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(2), Duration.ofSeconds(1))));
             }
@@ -210,18 +212,14 @@ public class GameManager implements Bootstrappable {
             player.sendMessage(Msg.goldSplash("GAME OVER!", "<%s>%s <gray>has won the game!", winningTeam.getColor(),
                 winningTeam.getDisplayName()));
             player.sendMessage(Msg.mm(""));
-            Stats stats = Cytosis.CONTEXT.getComponent(StatsManager.class).getStats(player.getUuid());
-            if (stats == null) {
-                player.sendMessage(Msg.whoops("You don't have any stats!"));
-            } else {
-                player.sendMessage(Msg.gold("<b>STATS:"));
-                player.sendMessage(Msg.grey("   Kills: <white>%s", stats.getKills()));
-                player.sendMessage(Msg.grey("   Final Kills: <white>%s", stats.getFinalKills()));
-                player.sendMessage(Msg.grey("   Deaths: <white>%s", stats.getDeaths()));
-                player.sendMessage(Msg.grey("   Beds broken: <white>%s", stats.getBedsBroken()));
-                player.sendMessage(Msg.grey("   Damage Dealt: <white>%s", stats.getDamageDealt()));
-                player.sendMessage(Msg.grey("   Damage Taken: <white>%s", stats.getDamageTaken()));
-            }
+            PlayerStats stats = player.getStats();
+            player.sendMessage(Msg.gold("<b>STATS:"));
+            player.sendMessage(Msg.grey("   Kills: <white>%s", stats.getKills()));
+            player.sendMessage(Msg.grey("   Final Kills: <white>%s", stats.getFinalKills()));
+            player.sendMessage(Msg.grey("   Deaths: <white>%s", stats.getDeaths()));
+            player.sendMessage(Msg.grey("   Beds broken: <white>%s", stats.getBedsBroken()));
+            player.sendMessage(Msg.grey("   Damage Dealt: <white>%s", stats.getDamageDealt()));
+            player.sendMessage(Msg.grey("   Damage Taken: <white>%s", stats.getDamageTaken()));
         });
     }
 
@@ -240,8 +238,9 @@ public class GameManager implements Bootstrappable {
             entity.remove();
         }
         teams.clear();
-        Cytosis.CONTEXT.getComponent(DatabaseManager.class).saveStats();
-        Cytosis.CONTEXT.getComponent(StatsManager.class).getStats().clear();
+        Cytosis.getOnlinePlayersAs(BedwarsPlayer.class).stream().map(BedwarsPlayer::getStats).forEach(model -> {
+            model.update();
+        });
         setup();
     }
 
@@ -296,19 +295,20 @@ public class GameManager implements Bootstrappable {
             p.sendMessage(message);
         });
         for (BedwarsPlayer p : team.getPlayers()) {
+            p.getStats().addBedLost();
             Title title = Title.title(Msg.red("<b>BED DESTROYED!"), Msg.white("You will no longer respawn!"),
                 Title.Times.times(Ticks.duration(10L), Ticks.duration(100L), Ticks.duration(20L)));
             p.showTitle(title);
         }
         // todo: display animations, messages, etc.
-        Cytosis.CONTEXT.getComponent(StatsManager.class).getStats(player.getUuid()).addBedBreak();
+        player.getStats().addBedBreak();
         team.setBed(false);
     }
 
     public void kill(@NotNull BedwarsPlayer dead, @Nullable BedwarsPlayer killer,
         @NotNull RegistryKey<@NotNull DamageType> damageType) {
         Team deadTeam = getPlayerTeam(dead).orElseThrow();
-        Cytosis.CONTEXT.getComponent(StatsManager.class).getStats(dead.getUuid()).addDeath();
+        dead.getStats().addDeath();
 
         //degrade tools
         AxeLevel axeLevel = AxeLevel.getByOrdinal(dead.getAxeLevel().ordinal() - 1);
@@ -330,7 +330,7 @@ public class GameManager implements Bootstrappable {
                 kill(dead, null, DamageType.OUT_OF_WORLD);
             } else {
                 if (!finalKill) {
-                    Cytosis.CONTEXT.getComponent(StatsManager.class).getStats(killer.getUuid()).addKill();
+                    killer.getStats().addKill();
                 }
                 message = message.append(Msg.grey("was slain by %s%s", getPlayerTeam(killer).orElseThrow().getPrefix(),
                     killer.getUsername()));
@@ -373,6 +373,7 @@ public class GameManager implements Bootstrappable {
             dead.setGameMode(GameMode.SPECTATOR);
             Cytosis.getOnlinePlayers().forEach((player -> player.sendMessage(finalMessage)));
             dead.setAlive(false);
+            dead.getStats().addFinalDeath();
             if (deadTeam.getAlivePlayers().isEmpty()) {
                 deadTeam.setAlive(false);
                 Cytosis.getOnlinePlayers().forEach(player -> {
@@ -384,7 +385,7 @@ public class GameManager implements Bootstrappable {
                 });
             }
             if (killer != null) {
-                Cytosis.CONTEXT.getComponent(StatsManager.class).getStats(killer.getUuid()).addFinalKill();
+                killer.getStats().addFinalKill();
             }
             if (teams.stream().filter(Team::isAlive).count() == 1) {
                 end();

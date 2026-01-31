@@ -2,6 +2,7 @@ package net.cytonic.cytonicbedwars.player;
 
 import java.util.UUID;
 
+import io.ebean.DB;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import net.cytonic.cytonicbedwars.data.enums.ArmorLevel;
 import net.cytonic.cytonicbedwars.data.enums.AxeLevel;
 import net.cytonic.cytonicbedwars.data.enums.PickaxeLevel;
+import net.cytonic.cytonicbedwars.data.objects.PlayerStats;
 import net.cytonic.cytonicbedwars.data.objects.Team;
 import net.cytonic.cytonicbedwars.managers.GameManager;
 import net.cytonic.cytonicbedwars.utils.Items;
@@ -36,6 +38,7 @@ public class BedwarsPlayer extends CytosisPlayer {
     private boolean alive = true;
     private boolean respawning = false;
     private Inventory enderChest = new Inventory(InventoryType.CHEST_3_ROW, "Ender Chest");
+    private PlayerStats stats = DB.find(PlayerStats.class, getUuid());
 
     public BedwarsPlayer(@NotNull PlayerConnection playerConnection, GameProfile gameProfile) {
         super(playerConnection, gameProfile);
@@ -56,6 +59,7 @@ public class BedwarsPlayer extends CytosisPlayer {
             this.alive = player.isAlive();
             this.respawning = player.isRespawning();
             this.enderChest = player.getEnderChest();
+            this.stats = player.getStats();
         });
     }
 
