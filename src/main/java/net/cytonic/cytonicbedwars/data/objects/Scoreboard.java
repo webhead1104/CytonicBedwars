@@ -1,5 +1,13 @@
 package net.cytonic.cytonicbedwars.data.objects;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
+
+import net.kyori.adventure.text.Component;
+
 import net.cytonic.cytonicbedwars.Config;
 import net.cytonic.cytonicbedwars.CytonicBedWars;
 import net.cytonic.cytonicbedwars.managers.GameManager;
@@ -7,19 +15,11 @@ import net.cytonic.cytonicbedwars.player.BedwarsPlayer;
 import net.cytonic.cytonicbedwars.runnables.GameRunnable;
 import net.cytonic.cytonicbedwars.runnables.WaitingRunnable;
 import net.cytonic.cytosis.Cytosis;
-import net.cytonic.cytosis.CytosisContext;
 import net.cytonic.cytosis.logging.Logger;
 import net.cytonic.cytosis.player.CytosisPlayer;
 import net.cytonic.cytosis.sideboard.Sideboard;
 import net.cytonic.cytosis.sideboard.SideboardCreator;
 import net.cytonic.cytosis.utils.Msg;
-import net.kyori.adventure.text.Component;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
 
 public class Scoreboard implements SideboardCreator {
 
@@ -38,55 +38,58 @@ public class Scoreboard implements SideboardCreator {
         try {
             switch (Cytosis.CONTEXT.getComponent(GameManager.class).getGameState()) {
                 case WAITING -> list = List.of(
-                        topLine(),
-                        Msg.mm(""),
-                        Msg.mm("Map: <green>" + Config.mapName),
-                        Msg.mm("Players: <green>" + Cytosis.getOnlinePlayers().size() + "/" + Config.maxPlayers),
-                        Msg.mm(""),
-                        Msg.mm("Waiting..."),
-                        Msg.mm(""),
-                        Msg.mm("Mode: <green>" + Config.mode),
-                        Msg.mm("Version: <gray>" + CytonicBedWars.version),
-                        Msg.mm(""),
-                        Msg.yellow("www.cytonic.net")
+                    topLine(),
+                    Msg.mm(""),
+                    Msg.mm("Map: <green>" + Config.mapName),
+                    Msg.mm("Players: <green>" + Cytosis.getOnlinePlayers().size() + "/" + Config.maxPlayers),
+                    Msg.mm(""),
+                    Msg.mm("Waiting..."),
+                    Msg.mm(""),
+                    Msg.mm("Mode: <green>" + Config.mode),
+                    Msg.mm("Version: <gray>" + CytonicBedWars.version),
+                    Msg.mm(""),
+                    Msg.yellow("www.cytonic.net")
                 );
 
                 case STARTING -> list = List.of(
-                        topLine(),
-                        Msg.mm(""),
-                        Msg.mm("Map: <green>" + Config.mapName),
-                        Msg.mm("Players: <green>" + Cytosis.getOnlinePlayers().size() + "/" + Config.maxPlayers),
-                        Msg.mm(""),
-                        Msg.mm("Starting in <green>%ds", WaitingRunnable.getTimeLeft()),
-                        Msg.mm(""),
-                        Msg.mm("Mode: <green>" + Config.mode),
-                        Msg.mm("Version: <gray>" + CytonicBedWars.version),
-                        Msg.mm(""),
-                        Msg.yellow("www.cytonic.net")
+                    topLine(),
+                    Msg.mm(""),
+                    Msg.mm("Map: <green>" + Config.mapName),
+                    Msg.mm("Players: <green>" + Cytosis.getOnlinePlayers().size() + "/" + Config.maxPlayers),
+                    Msg.mm(""),
+                    Msg.mm("Starting in <green>%ds", WaitingRunnable.getTimeLeft()),
+                    Msg.mm(""),
+                    Msg.mm("Mode: <green>" + Config.mode),
+                    Msg.mm("Version: <gray>" + CytonicBedWars.version),
+                    Msg.mm(""),
+                    Msg.yellow("www.cytonic.net")
                 );
 
                 case FROZEN -> list = List.of(
-                        topLine(),
-                        Msg.mm(""),
-                        Msg.mm("Map: <green>" + Config.mapName),
-                        Msg.mm(""),
-                        Msg.aqua("<bold>FROZEN"),
-                        Msg.mm("Mode: <green>" + Config.mode),
-                        Msg.mm("Version: <gray>" + CytonicBedWars.version),
-                        Msg.mm(""),
-                        Msg.yellow("www.cytonic.net")
+                    topLine(),
+                    Msg.mm(""),
+                    Msg.mm("Map: <green>" + Config.mapName),
+                    Msg.mm(""),
+                    Msg.aqua("<bold>FROZEN"),
+                    Msg.mm("Mode: <green>" + Config.mode),
+                    Msg.mm("Version: <gray>" + CytonicBedWars.version),
+                    Msg.mm(""),
+                    Msg.yellow("www.cytonic.net")
                 );
                 case PLAY, DIAMOND_2, EMERALD_2, DIAMOND_3, EMERALD_3, BED_DESTRUCTION, SUDDEN_DEATH -> {
                     List<Component> scoreboardArgs = new ArrayList<>();
                     scoreboardArgs.add(topLine());
                     scoreboardArgs.add(Msg.mm(""));
-                    scoreboardArgs.add(Msg.mm("%s in: <green>%s", Cytosis.CONTEXT.getComponent(GameManager.class).getGameState().getNext().getDisplayName(), GameRunnable.getFormattedTimeLeft()));
+                    scoreboardArgs.add(Msg.mm("%s in: <green>%s",
+                        Cytosis.CONTEXT.getComponent(GameManager.class).getGameState().getNext().getDisplayName(),
+                        GameRunnable.getFormattedTimeLeft()));
                     scoreboardArgs.add(Msg.mm(""));
                     GameManager gameManager = Cytosis.CONTEXT.getComponent(GameManager.class);
                     Optional<Team> playerTeam = gameManager.getPlayerTeam(player);
                     Config.teams.values().forEach(team -> {
                         String s = team.getPrefix() + "<reset>" + team.getDisplayName();
-                        if (gameManager.getTeamFromColor(team.getColor()).isPresent() && gameManager.getTeamFromColor(team.getColor()).get().isAlive()) {
+                        if (gameManager.getTeamFromColor(team.getColor()).isPresent() && gameManager.getTeamFromColor(
+                            team.getColor()).get().isAlive()) {
                             if (playerTeam.isPresent() && playerTeam.get().equals(team)) {
                                 scoreboardArgs.add(Msg.mm(s + " <gray>YOU"));
                                 return;
@@ -105,16 +108,16 @@ public class Scoreboard implements SideboardCreator {
                     list = scoreboardArgs;
                 }
                 case ENDED -> list = List.of(
-                        topLine(),
-                        Msg.mm(""),
-                        Msg.mm("Map: <green>" + Config.mapName),
-                        Msg.mm(""),
-                        Msg.mm("The game has ended!"),
-                        Msg.mm(""),
-                        Msg.mm("Mode: <green>" + Config.mode),
-                        Msg.mm("Version: <gray>" + CytonicBedWars.version),
-                        Msg.mm(""),
-                        Msg.yellow("www.cytonic.net")
+                    topLine(),
+                    Msg.mm(""),
+                    Msg.mm("Map: <green>" + Config.mapName),
+                    Msg.mm(""),
+                    Msg.mm("The game has ended!"),
+                    Msg.mm(""),
+                    Msg.mm("Mode: <green>" + Config.mode),
+                    Msg.mm("Version: <gray>" + CytonicBedWars.version),
+                    Msg.mm(""),
+                    Msg.yellow("www.cytonic.net")
                 );
             }
         } catch (Exception e) {
@@ -129,6 +132,7 @@ public class Scoreboard implements SideboardCreator {
     }
 
     private Component topLine() {
-        return Msg.grey("%s <dark_gray>%s", new SimpleDateFormat("M/d/yy").format(Calendar.getInstance().getTime()), CytosisContext.SERVER_ID);
+        return Msg.grey("%s <dark_gray>%s", new SimpleDateFormat("M/d/yy").format(Calendar.getInstance().getTime()),
+            Cytosis.CONTEXT.SERVER_ID);
     }
 }

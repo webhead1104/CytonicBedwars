@@ -21,6 +21,7 @@ dependencies {
 
 migration {
     id = "cytonicbedwars"
+    platform = io.ebean.annotation.Platform.POSTGRES
 }
 
 java {
